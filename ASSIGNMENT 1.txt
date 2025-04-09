@@ -1,0 +1,248 @@
+                                                                    ASSIGNMENT 1
+'TASK-1'
+#QUERY 1
+create DATABASE TECHSHOP;
+USE TECHSHOP;
+
+#QUER 2 & 4
+CREATE TABLE CUSTOMERS (
+CUSTOMER_ID INT PRIMARY KEY,
+FIRST_NAME VARCHAR(100),
+LAST_NAME VARCHAR(100),
+EMAIL VARCHAR(100),
+PHONE INT ,
+ADDRESS VARCHAR(200));
+CREATE TABLE PRODUCTS (
+PRODUCT_ID INT PRIMARY KEY,
+PRODUCT_NAME VARCHAR(100),
+PRODUCT_DESCRIPTION VARCHAR(100),
+PRICE INT );
+CREATE TABLE ORDERS (
+ORDERS_ID INT PRIMARY KEY,
+ORDERDATE DATE,
+TOTAL_AMT INT,
+CUSTOMER_ID INT,
+FOREIGN KEY (CUSTOMER_ID) REFERENCES CUSTOMERS(CUSTOMER_ID)
+);
+CREATE TABLE ORDERDETAILS (
+ORDERDETAILS_ID INT PRIMARY KEY,
+ORDERS_ID INT,
+PRODUCT_ID INT,
+QUANTITY INT ,
+FOREIGN KEY (ORDERS_ID) REFERENCES ORDERS(ORDERS_ID),
+FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS(PRODUCT_ID));
+CREATE TABLE INVENTORY (
+INVENTORY_ID INT PRIMARY KEY,
+PRODUCT_ID INT,
+QUANTITY_IN_STOCK INT ,
+LAST_STOCK_UPDATE INT,
+FOREIGN KEY (PRODUCT_ID) REFERENCES PRODUCTS(PRODUCT_ID));
+
+# QUERY 5
+INSERT INTO CUSTOMERS (CUSTOMER_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE, ADDRESS) VALUES
+(1, 'Alice', 'Smith', 'alice@example.com', 987651570, '422 Main St'),
+(2, 'Bob', 'Johnson', 'bob@example.com', 987652012, '746 Main St'),
+(3, 'Charlie', 'Williams', 'charlie@example.com', 987653150, '422 Main St'),
+(4, 'David', 'Brown', 'david@example.com', 987658286, '250 Main St'),
+(5, 'Eve', 'Jones', 'eve@example.com', 987654717, '866 Main St'),
+(6, 'Fay', 'Garcia', 'fay@example.com', 987659680, '121 Main St'),
+(7, 'Grace', 'Miller', 'grace@example.com', 987655505, '208 Main St'),
+(8, 'Heidi', 'Davis', 'heidi@example.com', 987656305, '524 Main St'),
+(9, 'Ivan', 'Martinez', 'ivan@example.com', 987652236, '321 Main St'),
+(10, 'Judy', 'Wilson', 'judy@example.com', 987657650, '699 Main St');
+INSERT INTO PRODUCTS (PRODUCT_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION, PRICE) VALUES
+(1, 'Smartphone', 'Smartphone with high specs', 9190),
+(2, 'Laptop', 'Laptop with high specs', 5480),
+(3, 'Tablet', 'Tablet with high specs', 5740),
+(4, 'Smartwatch', 'Smartwatch with high specs', 4710),
+(5, 'Camera', 'Camera with high specs', 6820),
+(6, 'Headphones', 'Headphones with high specs', 3850),
+(7, 'Speaker', 'Speaker with high specs', 3870),
+(8, 'Router', 'Router with high specs', 8580),
+(9, 'Monitor', 'Monitor with high specs', 4120),
+(10, 'Keyboard', 'Keyboard with high specs', 5220);
+INSERT INTO ORDERS (ORDERS_ID, ORDERDATE, TOTAL_AMT, CUSTOMER_ID) VALUES
+(1, '2024-03-09', 19310, 1),
+(2, '2024-02-11', 15590, 4),
+(3, '2024-02-26', 8410, 9),
+(4, '2024-03-20', 5740, 6),
+(5, '2024-02-23', 10310, 4),
+(6, '2024-02-02', 5480, 10),
+(7, '2024-01-15', 39350, 10),
+(8, '2024-02-17', 13100, 3),
+(9, '2024-02-24', 13420, 3),
+(10, '2024-01-13', 11500, 7);
+INSERT INTO ORDERDETAILS (ORDERDETAILS_ID, ORDERS_ID, PRODUCT_ID, QUANTITY) VALUES
+(1, 1, 9, 3),
+(2, 2, 3, 2),
+(3, 2, 5, 1),
+(4, 3, 6, 2),
+(5, 4, 3, 1),
+(6, 5, 7, 1),
+(7, 5, 6, 1),
+(8, 6, 2, 1),
+(9, 7, 1, 3),
+(10, 7, 4, 3);
+INSERT INTO INVENTORY (INVENTORY_ID, PRODUCT_ID, QUANTITY_IN_STOCK, LAST_STOCK_UPDATE) VALUES
+(1, 1, 79, 20240215),
+(2, 2, 61, 20240206),
+(3, 3, 27, 20240212),
+(4, 4, 70, 20240221),
+(5, 5, 19, 20240220),
+(6, 6, 94, 20240228),
+(7, 7, 75, 20240223),
+(8, 8, 52, 20240219),
+(9, 9, 99, 20240211),
+(10, 10, 71, 20240214);
+
+'TASK-2'
+#QUERY 1
+SELECT FIRST_NAME,LAST_NAME,EMAIL FROM CUSTOMERS;
+
+#QUERY 2
+SELECT O.ORDERS_ID,O.ORDERDATE,C.FIRST_NAME FROM orders O,CUSTOMERS C WHERE C.CUSTOMER_ID=O.CUSTOMER_ID ; 
+
+#QUERY 3
+INSERT INTO CUSTOMERS (CUSTOMER_ID, FIRST_NAME, LAST_NAME, EMAIL, PHONE, ADDRESS) VALUES
+(11, 'ANU', 'AMIR', 'anu@example.com', 987652345, '322 Main St');
+select*from customers;
+
+#QUERY 4
+UPDATE PRODUCTS SET PRICE = PRICE * 1.10 WHERE PRODUCT_ID;
+SELECT *FROM PRODUCTS;
+
+#QUERY 5
+DELETE FROM ORDERS WHERE ORDERS_ID=9;
+DELETE FROM ORDERDETAILS WHERE ORDERS_ID=9;
+select*from ORDERs;
+
+#QUERY 6
+INSERT INTO ORDERS (ORDERS_ID, ORDERDATE, TOTAL_AMT, CUSTOMER_ID) VALUES
+(9, '2024-02-24', 13420, 3);
+select*from ORDERs;
+
+#QUERY 7
+UPDATE CUSTOMERS SET PHONE=98787899 WHERE CUSTOMER_ID='1';
+select*from CUSTOMERS;
+
+#QUEY 8
+UPDATE ORDERS
+SET TOTAL_AMT = ( SELECT SUM(PRICE * QUANTITY) FROM ORDERDETAILS, PRODUCTS WHERE ORDERDETAILS.PRODUCT_ID = PRODUCTS.PRODUCT_ID
+AND ORDERDETAILS.ORDERS_ID = ORDERS.ORDERS_ID);
+select*from ORDERs;
+
+#QUERY 9
+DELETE FROM ORDERDETAILS
+WHERE ORDERS_ID IN ( SELECT ORDERS_ID FROM ORDERS WHERE CUSTOMER_ID = 3);
+DELETE FROM ORDERS WHERE CUSTOMER_ID = 3;
+
+#QUERY 10
+INSERT INTO PRODUCTS (PRODUCT_ID, PRODUCT_NAME, PRODUCT_DESCRIPTION, PRICE) VALUES
+(11, 'IPAD', 'IPAD with high specs', 1010);
+select*from PRODUCTs;
+
+#QUERY11
+ALTER TABLE ORDERS CHANGE STATUS ORDER_STATUS VARCHAR(100) ;
+UPDATE  ORDERS SET ORDER_STATUS ='PENDING';
+UPDATE ORDERS SET ORDER_STATUS ='SHIPPED' WHERE ORDERS_ID=3;
+  
+#QUERY12
+ALTER TABLE Customers ADD OrderCount INT DEFAULT 0;
+UPDATE Customers c SET OrderCount = (SELECT COUNT(*) FROM Orders o WHERE o.Customer_id = c.Customer_id);
+SELECT * FROM Customers; 
+
+'TASK3'
+#QUERY 1
+SELECT o.OrderS_id,o.Orderdate,o.Total_amt,c.Customer_id,CONCAT(c.First_name, ' ', c.Last_name) AS Customer_Name
+FROM Orders o JOIN Customers c ON o.Customer_id = c.Customer_id;
+
+#QUERY 2
+SELECT P.PRODUCT_NAME,SUM(OD.QUANTITY * P.PRICE) AS TOTAL_REVENUE FROM ORDERDETAILS OD JOIN PRODUCTS P ON OD.PRODUCT_ID = P.PRODUCT_ID
+GROUP BY P.PRODUCT_NAME ORDER BY TOTAL_REVENUE DESC; 
+
+#QUERY 3
+SELECT c.Customer_id,CONCAT(c.First_name, ' ', c.Last_name) AS Customer_Name,c.Email,c.Phone,c.Address,COUNT(o.Order_id) AS Total_Purchases
+FROM Customers c JOIN Orders o ON c.Customer_id = o.Customer_id GROUP BY c.Customer_id HAVING COUNT(o.Order_id) >= 1;
+
+#QUERY 4
+SELECT p.Product_name,SUM(od.Quantity) AS Total_Quantity_Ordered FROM OrderDetails od JOIN Products p ON od.Product_id = p.Product_id
+GROUP BY p.Product_id ORDER BY Total_Quantity_Ordered DESC;
+
+#QUERY 5
+ALTER TABLE Products ADD Category VARCHAR(50);
+UPDATE Products SET Category = 'Gadgets';
+SELECT Product_name,Product_Description,Category FROM Products;
+
+#QUERY 6
+SELECT C.Customer_id,CONCAT(C.First_name, ' ', C.Last_name) AS Customer_Name,AVG(O.Total_amt) AS Average_Order_Value
+FROM Orders O JOIN Customers C ON O.Customer_id = C.Customer_id GROUP BY C.Customer_id, C.First_name, C.Last_name
+ORDER BY Average_Order_Value DESC;
+
+#QUERY 7
+SELECT O.ORDERS_ID,CONCAT(c.First_name, ' ', c.Last_name),O.TOTAL_AMT AS TOTAL_REVENUE
+FROM ORDERS O JOIN CUSTOMERS C ON O.CUSTOMER_ID = C.CUSTOMER_ID
+ORDER BY O.TOTAL_AMT DESC;
+
+#QUERY 8
+SELECT P.PRODUCT_NAME,COUNT(OD.ORDERDETAILS_ID) AS TIMES_ORDERED FROM PRODUCTS P JOIN ORDERDETAILS OD ON P.PRODUCT_ID = OD.PRODUCT_ID
+GROUP BY P.PRODUCT_NAME ORDER BY TIMES_ORDERED DESC;
+
+#QUERY9
+SELECT distinct C.Customer_id,CONCAT(C.First_name, ' ', C.Last_name) AS Customer_Name,C.Email,C.Phone
+FROM Customers C JOIN Orders O ON C.Customer_id = O.Customer_id JOIN OrderDetails OD ON O.OrderS_id = OD.OrderS_id
+JOIN Products P ON OD.Product_id = P.Product_id WHERE P.Product_name LIKE 'S%';
+
+#QUERY10
+SELECT SUM(TOTAL_AMT) AS TOTAL_REVENUE
+FROM ORDERS WHERE ORDERDATE BETWEEN '2024-02-01' AND '2024-03-01';
+
+'TASK 4'
+#QUERY1
+SELECT Customer_id, First_name, Last_name, Email, Phone
+FROM Customers WHERE Customer_id NOT IN (SELECT Customer_id FROM Orders);
+
+#QUERY 2
+SELECT (SELECT COUNT(*) FROM PRODUCTS WHERE PRODUCT_ID IN (SELECT PRODUCT_ID FROM INVENTORY
+ WHERE QUANTITY_IN_STOCK > 0)) AS TOTAL_PRODUCTS_AVAILABLE;
+
+#QUERY 3
+ SELECT (SELECT SUM(Total_amT) FROM Orders) AS Total_Revenue;
+
+#QUERY 4
+SELECT AVG(OD.QUANTITY) AS AVERAGE_QUANTITY_ORDERED
+FROM ORDERDETAILS OD
+JOIN PRODUCTS P ON OD.PRODUCT_ID = P.PRODUCT_ID;
+
+#QUERY 5
+SELECT C.Customer_ID,CONCAT(C.First_Name, ' ', C.Last_Name) AS Customer_Name,COALESCE((SELECT SUM(O.TOTAL_AMT)
+FROM Orders O WHERE O.Customer_ID = C.Customer_ID)) AS Total_Revenue FROM Customers C WHERE C.Customer_ID = 1;
+
+#QUERY 6
+ SELECT CONCAT(C.First_name, ' ', C.Last_name) AS Customer_Name,Order_Count
+FROM Customers C JOIN (SELECT Customer_id,COUNT(*) AS Order_Count FROM Orders GROUP BY Customer_id) AS OrderStats ON C.Customer_id = OrderStats.Customer_id
+WHERE Order_Count = (SELECT MAX(OrderCount)FROM (SELECT Customer_id,COUNT(*) AS OrderCount FROM Orders GROUP BY Customer_id) AS CountPerCustomer);
+
+#QUERY 7
+SELECT Category,Total_Quantity
+FROM (SELECT P.Category, SUM(OD.Quantity) AS Total_Quantity
+FROM OrderDetails OD JOIN  Products P ON OD.Product_ID = P.Product_ID GROUP BY P.Category) AS CategoryTotals
+WHERE Total_Quantity = (SELECT MAX(TotalPerCategory)FROM (SELECT SUM(OD.Quantity) AS TotalPerCategory
+FROM OrderDetails OD JOIN Products P ON OD.Product_ID = P.Product_ID GROUP BY P.Category) AS Totals);
+
+#QUERY 8
+SELECT CONCAT(C.First_Name, ' ', C.Last_Name) AS Customer_Name,SUM(P.Price * OD.Quantity) AS Total_Spending
+FROM Customers C JOIN Orders O ON C.Customer_ID = O.Customer_ID
+JOIN OrderDetails OD ON O.Orders_ID = OD.Orders_ID JOIN Products P ON OD.Product_ID = P.Product_ID
+WHERE P.Product_Name IN ('Smartphone', 'Laptop', 'Tablet', 'Smartwatch', 'Camera', 'Headphones', 'Speaker', 'Router', 'Monitor', 'Keyboard')
+GROUP BY C.Customer_ID, C.First_Name, C.Last_Name
+ORDER BY Total_Spending DESC;
+
+#QUERY 9
+SELECT AVG(CustomerTotal.Total_Revenue / CustomerTotal.Total_Orders) AS Average_Order_Value
+FROM (SELECT O.Customer_id,COUNT(O.OrderS_id) AS Total_Orders,SUM(O.Total_amt) AS Total_Revenue
+FROM Orders O GROUP BY O.Customer_id) AS CustomerTotal;
+
+#QUERY 10
+SELECT CONCAT(C.First_name, ' ', C.Last_name) AS Customer_Name,COUNT(O.OrderS_id) AS Total_Orders
+FROM Customers C JOIN Orders O ON C.Customer_id = O.Customer_id
+GROUP BY C.Customer_id, C.First_name, C.Last_name ORDER BY Total_Orders DESC;
